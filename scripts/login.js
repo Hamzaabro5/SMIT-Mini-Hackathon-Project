@@ -4,6 +4,7 @@ import {auth} from "./config.js";
 const form = document.querySelector(`form`)
 const email = document.querySelector(`#email`)
 const password = document.querySelector(`#password`)
+const signup = document.querySelector(`.Signup`)
 
 
 form.addEventListener(`submit` , (event)=>{
@@ -11,7 +12,16 @@ form.addEventListener(`submit` , (event)=>{
     signInWithEmailAndPassword(auth, email.value, password.value)
   .then((userCredential) => {
     const user = userCredential.user;
-    console.log(user);
+    console.log(user === true);
+    if (user) {
+      signup.innerHTML =`<li><a href="#">Logout</a></li>`
+    } else {
+      
+    }
+
+
+
+
     window.location = `./index.html`
 
   })

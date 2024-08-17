@@ -1,12 +1,18 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-import { doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js"; 
+import { 
+  setDoc,
+  doc,
+  collection,
+  getDocs,
+  query
+ } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js"; 
 import { auth, db } from "./config.js";
 
 const form = document.querySelector(`form`)
 const placeholder = document.querySelector(`#Placeholder`)
 const desc = document.querySelector(`#desc`)
 const renderdata = document.querySelector(`.renderdata`)
-let arr;
+let arr = [];
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -16,58 +22,60 @@ onAuthStateChanged(auth, (user) => {
     window.location = `./login.html`
 }});
 
-function render() {
-  renderdata.innerHTML += `
-  <div class="card border-2 border-current p-2 my-6 card-side bg-white text-black shadow-lg">
-             <div class="card-body">
-               <h2 class="card-title font-bold placeholderdata">${placeholder.value}</h2>
-               <p class="descdata">${desc.value}</p>
-               <div class="card-actions justify-end">
-                 <a class="link link-primary">Update</a>
-                 <a class="link link-primary">Delete</a>
-               </div>
-             </div>
-           </div>
- `
-}
-
 form.addEventListener(`submit` , (event)=>{
   event.preventDefault();
 
    render()
   
    async function addData() {
-      await setDoc(doc(db, "title"),{
+      await setDoc(doc(db, "blogs", "blogs"),{
         title: placeholder.value,
         description: desc.value,
       });
       alert(`added`);
       
     }
-    addData()
+    addData() 
 
-    async function getData() {
-      arr = [];
-      const q = collection(db, "title");
+    
+    
+    
+    
+    
+    placeholder.value = ``
+    desc.value = ``
+  })
+  
+      async function getData() {
+        arr = [];
+        const q = query(collection(db, "blogs"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        arr.push({ ...doc.data(), id: doc.id});
-      });
-       render()
-     }
-     getData()
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, " => ", doc.data());
+        arr.push(doc.data());
+        
+      })
+      console.log(arr);
+      render()
+       }
+      getData()
+       
 
 
-
-
-
-
-
-
-
-
-
-
-  placeholder.value = ``
-  desc.value = ``
-})
+function render() {
+  arr.map((item)=>{
+    renderdata.innerHTML = `
+    <div class="card border-2 border-current p-2 my-6 card-side bg-white text-black shadow-lg">
+               <div class="card-body">
+                 <h2 class="card-title font-bold placeholder">${item.placeholder}</h2>
+                 <p class="desc">${item.desc}</p>
+                 <div class="card-actions justify-end">
+                   <a class="link link-primary">Update</a>
+                   <a class="link link-primary">Delete</a>
+                 </div>
+               </div>
+             </div>
+   `
+  })
+}

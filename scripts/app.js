@@ -1,4 +1,4 @@
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { onAuthStateChanged , signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 import { auth } from "./config.js";
 
 
@@ -26,7 +26,7 @@ onAuthStateChanged(auth, (user) => {
             Dashboard
           </a>
         </li>
-        <li><a class="logout">Logout</a></li>
+        <li><a onclick="logOut()" class="logout">Logout</a></li>
       </ul>
     </div>
     `
