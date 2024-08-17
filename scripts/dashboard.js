@@ -64,8 +64,9 @@ form.addEventListener(`submit` , (event)=>{
 
 
 function render() {
+  renderdata.innerHTML = ``;
   arr.map((item)=>{
-    renderdata.innerHTML = `
+    renderdata.innerHTML += `
     <div class="card border-2 border-current p-2 my-6 card-side bg-white text-black shadow-lg">
                <div class="card-body">
                  <h2 class="card-title font-bold placeholder">${item.placeholder}</h2>
